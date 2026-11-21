@@ -1,0 +1,105 @@
+﻿@model List<ListaTareas.Models.Tarea>
+
+<style>
+            .contenedor {
+                width: 500px;
+                margin: 40px auto;
+                padding: 20px;
+                border: 1px solid gray;
+                border-radius: 5px;
+            }
+
+            .campo {
+                padding: 10px;
+                width: 70%;
+            }
+
+            .boton {
+                padding: 10px;
+                cursor: pointer;
+            }
+
+            .tarea {
+                padding: 12px;
+                border-bottom: 1px solid gray;
+            }
+
+            .error {
+                color: red;
+            }
+</style>
+
+<div class="contenedor">
+
+    <h1>Mi Lista de Tareas</h1>
+
+    <form asp-controller="Tareas" asp-action="Agregar" method="post">
+
+        <input type="text"
+               name="descripcion"
+               class="campo"
+               placeholder="Escribe una tarea..." />
+
+        <button type="submit" class="boton">Agregar</button>
+
+    </form>
+
+            @if (ViewBag.Error != null)
+            {
+                <p class="error">@ViewBag.Error</p>
+            }
+
+            <h3>Mis tareas:</h3>
+
+                @if (Model.Count == 0)
+                {
+                    <p>No hay tareas registradas.</p>
+                }
+
+                @foreach (var tarea in Model)
+                {
+                    <div class="tarea">
+
+                        @if (tarea.Completada)
+                        {
+                            <span style="text-decoration: line-through;">
+                                @tarea.Descripcion
+                            </span>
+
+                            <strong> - Completada</strong>
+                        }
+                        else
+                        {
+                            <span>@tarea.Descripcion</span>
+
+                            <form asp-controller="Tareas"
+                                  asp-action="Completar"
+                                  method="post"
+                                  style="display:inline;">
+
+                                <input type="hidden" name="id" value="@tarea.Id" />
+
+                                <button type="submit" class="boton">
+                                    Completar
+                                </button>
+
+                            </form>
+                    }
+
+                        <form asp-controller="Tareas"
+                              asp-action="Eliminar"
+                              method="post"
+                              style="display:inline;">
+
+                            <input type="hidden" name="id" value="@tarea.Id" />
+
+                            <button type="submit" class="boton">
+                                Eliminar
+                            </button>
+
+            </form>
+
+        </div>
+    }
+
+</div>
